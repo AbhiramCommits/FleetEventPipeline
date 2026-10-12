@@ -1,4 +1,4 @@
-PY ?= python3
+PY ?= $(shell if [ -x .venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 NPM ?= npm
 COMPOSE ?= docker compose
 LOOKBACK_HOURS ?= 720
