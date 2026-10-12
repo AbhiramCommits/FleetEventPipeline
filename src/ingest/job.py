@@ -30,6 +30,7 @@ from src.common.db import execute_many, get_conn
 from src.common.logging import get_logger, log_event, set_run_id
 from src.ingest.client import FleetApiClient
 from src.ingest.eventgrid import build_envelopes, publish
+from src.ingest.reference_sync import sync_references
 from src.ingest.watermark import advance_watermark, read_watermark
 
 logger = get_logger("fleet.ingest.job")
@@ -62,16 +63,26 @@ def finish_run(
     status: str,
     rows_read: int = 0,
     rows_written: int = 0,
-    rows_rejected: int = 0,
-    rows_deduped: int = 0,
+    rows_rejected: int | None = None,
+    rows_deduped: int | None = None,
     notes: str | None = None,
 ) -> None:
-    """Finalize a ``ctl.pipeline_run`` row."""
+    """Finalize a ``ctl.pipeline_run`` row.
+
+    ``rows_rejected`` / ``rows_deduped`` default to ``None`` so the counters the
+    Event Grid handler incremented during the run are preserved rather than
+    overwritten.
+    """
     conn.execute(
         """
         UPDATE ctl.pipeline_run
-           SET finished_at = now(), status = %s, rows_read = %s, rows_written = %s,
-               rows_rejected = %s, rows_deduped = %s, notes = %s
+           SET finished_at   = now(),
+               status        = %s,
+               rows_read     = %s,
+               rows_written  = %s,
+               rows_rejected = COALESCE(%s, rows_rejected),
+               rows_deduped  = COALESCE(%s, rows_deduped),
+               notes         = %s
          WHERE run_id = %s
         """,
         (status, rows_read, rows_written, rows_rejected, rows_deduped, notes, run_id),
@@ -148,6 +159,7 @@ def run(sources: list[str], lookback_hours: int, publish_events: bool = True) ->
         total_read = total_landed = total_retries = 0
         started = time.perf_counter()
         try:
+            sync_references(client, conn)
             for source in sources:
                 res = run_source(source, client, conn, run_id, limit=settings.page_size, publish_events=publish_events)
                 results.append(res)

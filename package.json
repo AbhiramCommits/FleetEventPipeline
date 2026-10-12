@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node handler/src/server.js",
-    "test": "node --test handler/test"
+    "test": "node --test handler/test/*.test.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

@@ -171,12 +171,14 @@ def _gen_vehicle_day(
     day: datetime,
     rng: random.Random,
     seq_start: int,
+    geo_seq_start: int,
     odometer: float,
     engine_hours: float,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int, float, float]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int, int, float, float]:
     gps: list[dict[str, Any]] = []
     geo: list[dict[str, Any]] = []
     seq = seq_start
+    geo_seq = geo_seq_start
 
     yard = vehicle["yard"]
     site = vehicle["site"]
@@ -211,10 +213,11 @@ def _gen_vehicle_day(
         seq += 1
 
     def add_geo(ts: datetime, geofence: dict[str, Any], event_type: str) -> None:
+        nonlocal geo_seq
         lat, lon = _point_in(geofence, rng)
         geo.append(
             {
-                "id": f"gf-{int(vehicle['vehicleId'].split('-')[1]):03d}-{len(geo):05d}",
+                "id": f"gf-{int(vehicle['vehicleId'].split('-')[1]):03d}-{geo_seq:07d}",
                 "vehicleId": vehicle["vehicleId"],
                 "geofenceId": geofence["geofenceId"],
                 "eventType": event_type,
@@ -223,6 +226,7 @@ def _gen_vehicle_day(
                 "lon": lon,
             }
         )
+        geo_seq += 1
 
     interval = rng.uniform(150, 210)
 
@@ -287,7 +291,7 @@ def _gen_vehicle_day(
 
     # 5) Short idle then engine off.
     emit(t, yard_lat, yard_lon, 0.0, False)
-    return gps, geo, seq, odometer, engine_hours
+    return gps, geo, seq, geo_seq, odometer, engine_hours
 
 
 def _inject_defects(
@@ -386,9 +390,10 @@ def generate() -> dict[str, Any]:
         odometer = rng.uniform(1000, 90000)
         engine_hours = rng.uniform(100, 9000)
         seq = 0
+        geo_seq = 0
         for day in days:
-            day_gps, day_geo, seq, odometer, engine_hours = _gen_vehicle_day(
-                vehicle, operator["operatorId"], day, rng, seq, odometer, engine_hours
+            day_gps, day_geo, seq, geo_seq, odometer, engine_hours = _gen_vehicle_day(
+                vehicle, operator["operatorId"], day, rng, seq, geo_seq, odometer, engine_hours
             )
             gps.extend(day_gps)
             geo.extend(day_geo)
