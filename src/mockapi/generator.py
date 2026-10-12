@@ -174,6 +174,7 @@ def _gen_vehicle_day(
     geo_seq_start: int,
     odometer: float,
     engine_hours: float,
+    first_day: bool = False,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int, int, float, float]:
     gps: list[dict[str, Any]] = []
     geo: list[dict[str, Any]] = []
@@ -229,6 +230,11 @@ def _gen_vehicle_day(
         geo_seq += 1
 
     interval = rng.uniform(150, 210)
+
+    # The asset is already resident at its home yard at the start of the very
+    # first day, so emit the matching yard entry before the first exit.
+    if first_day:
+        add_geo(t - timedelta(minutes=1), yard, "entry")
 
     # 1) Idle at the yard (engine on, speed 0).
     idle_min = rng.randint(5, 15)
@@ -393,7 +399,8 @@ def generate() -> dict[str, Any]:
         geo_seq = 0
         for day in days:
             day_gps, day_geo, seq, geo_seq, odometer, engine_hours = _gen_vehicle_day(
-                vehicle, operator["operatorId"], day, rng, seq, geo_seq, odometer, engine_hours
+                vehicle, operator["operatorId"], day, rng, seq, geo_seq, odometer, engine_hours,
+                first_day=(day == days[0]),
             )
             gps.extend(day_gps)
             geo.extend(day_geo)

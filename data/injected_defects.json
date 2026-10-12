@@ -1,19 +1,19 @@
 {
   "seed": 1993,
-  "generated_at": "2026-10-12T20:52:48.506030+00:00",
+  "generated_at": "2026-10-12T20:56:49.827111+00:00",
   "history_days": 30,
   "counts": {
-    "gps_events_total": 161732,
-    "geofence_events_total": 3352,
+    "gps_events_total": 162034,
+    "geofence_events_total": 3392,
     "vehicles": 40,
     "geofences": 9
   },
   "injected": {
-    "duplicate_events": 3182,
-    "late_arriving": 1575,
-    "null_gps": 810,
-    "null_island": 814,
-    "out_of_range": 739,
+    "duplicate_events": 3186,
+    "late_arriving": 1577,
+    "null_gps": 819,
+    "null_island": 809,
+    "out_of_range": 738,
     "unmatched_geofence_exits": 8,
     "stale_vehicles": 3
   }

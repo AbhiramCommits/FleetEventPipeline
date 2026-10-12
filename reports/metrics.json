@@ -1,0 +1,297 @@
+{
+  "generated_at": "2026-10-12T20:57:55.085298+00:00",
+  "run_ids": {
+    "ingest": "80f7a7d8-1620-4702-98fc-987c70ed060f",
+    "elt": "525c55a5-f534-49bb-be57-35cf6b7ae675",
+    "dq": "f950d597-e272-4da5-af84-aad4219c9dee"
+  },
+  "total_pipeline_runtime_sec": 23.41,
+  "ingestion": {
+    "run_id": "80f7a7d8-1620-4702-98fc-987c70ed060f",
+    "wall_clock_sec": 13.591,
+    "rows_read_total": 165426,
+    "rows_landed_total": 165426,
+    "rows_deduped": 3105,
+    "rows_rejected": 4009,
+    "retry_count": 5,
+    "rows_per_sec": 12172.1
+  },
+  "tables": {
+    "raw": {
+      "gps_ping_raw": 162034,
+      "geofence_event_raw": 3392
+    },
+    "staging": {
+      "gps_ping": 154920,
+      "geofence_event": 3392,
+      "vehicle": 40,
+      "operator": 24,
+      "geofence": 9
+    },
+    "mart": {
+      "dim_vehicle": 40,
+      "dim_operator": 24,
+      "dim_geofence": 9,
+      "dim_date": 29,
+      "dim_time_of_day": 24,
+      "fact_gps_ping": 154920,
+      "fact_trip_segment": 4887,
+      "fact_idle_event": 4695,
+      "fact_geofence_transition": 1720
+    }
+  },
+  "rejects": {
+    "total": 4009,
+    "by_reason": {
+      "LATE_ARRIVING": 1574,
+      "MISSING_GPS": 844,
+      "NULL_ISLAND": 834,
+      "OUT_OF_RANGE_LATLON": 757
+    }
+  },
+  "dedupe": {
+    "duplicates_blocked": 3105,
+    "injected_duplicates": 3186,
+    "dedupe_recall_pct": 97.46
+  },
+  "defect_recall": [
+    {
+      "defect": "duplicate_events",
+      "injected": 3186,
+      "caught": 3105,
+      "recall_pct": 97.46
+    },
+    {
+      "defect": "late_arriving",
+      "injected": 1577,
+      "caught": 1574,
+      "recall_pct": 99.81
+    },
+    {
+      "defect": "null_gps",
+      "injected": 819,
+      "caught": 844,
+      "recall_pct": 103.05
+    },
+    {
+      "defect": "null_island",
+      "injected": 809,
+      "caught": 834,
+      "recall_pct": 103.09
+    },
+    {
+      "defect": "out_of_range",
+      "injected": 738,
+      "caught": 757,
+      "recall_pct": 102.57
+    },
+    {
+      "defect": "unmatched_geofence_exits",
+      "injected": 8,
+      "caught": 8,
+      "recall_pct": 100.0
+    },
+    {
+      "defect": "stale_vehicles",
+      "injected": 3,
+      "caught": 3,
+      "recall_pct": 100.0
+    }
+  ],
+  "utilization_by_asset_type": [
+    {
+      "asset_type": "dozer",
+      "moving_hours": 1295.22,
+      "idle_hours": 494.81,
+      "utilization_pct": 72.36,
+      "idle_pct": 27.64
+    },
+    {
+      "asset_type": "excavator",
+      "moving_hours": 1328.4,
+      "idle_hours": 478.0,
+      "utilization_pct": 73.54,
+      "idle_pct": 26.46
+    },
+    {
+      "asset_type": "haul_truck",
+      "moving_hours": 1333.1,
+      "idle_hours": 479.15,
+      "utilization_pct": 73.56,
+      "idle_pct": 26.44
+    },
+    {
+      "asset_type": "pickup",
+      "moving_hours": 1327.43,
+      "idle_hours": 488.24,
+      "utilization_pct": 73.11,
+      "idle_pct": 26.89
+    }
+  ],
+  "top_idle_vehicles": [
+    {
+      "vehicle_id": "VEH-004",
+      "name": "Unit 004",
+      "asset_type": "pickup",
+      "idle_hours": 55.85
+    },
+    {
+      "vehicle_id": "VEH-018",
+      "name": "Unit 018",
+      "asset_type": "dozer",
+      "idle_hours": 54.44
+    },
+    {
+      "vehicle_id": "VEH-023",
+      "name": "Unit 023",
+      "asset_type": "haul_truck",
+      "idle_hours": 53.07
+    },
+    {
+      "vehicle_id": "VEH-011",
+      "name": "Unit 011",
+      "asset_type": "haul_truck",
+      "idle_hours": 52.59
+    },
+    {
+      "vehicle_id": "VEH-037",
+      "name": "Unit 037",
+      "asset_type": "excavator",
+      "idle_hours": 52.41
+    },
+    {
+      "vehicle_id": "VEH-019",
+      "name": "Unit 019",
+      "asset_type": "haul_truck",
+      "idle_hours": 51.96
+    },
+    {
+      "vehicle_id": "VEH-024",
+      "name": "Unit 024",
+      "asset_type": "pickup",
+      "idle_hours": 51.72
+    },
+    {
+      "vehicle_id": "VEH-009",
+      "name": "Unit 009",
+      "asset_type": "excavator",
+      "idle_hours": 51.46
+    },
+    {
+      "vehicle_id": "VEH-038",
+      "name": "Unit 038",
+      "asset_type": "dozer",
+      "idle_hours": 51.45
+    },
+    {
+      "vehicle_id": "VEH-012",
+      "name": "Unit 012",
+      "asset_type": "pickup",
+      "idle_hours": 51.15
+    }
+  ],
+  "geofence_by_site": [
+    {
+      "site_name": "Fairview Site 1",
+      "job_number": "J-1000",
+      "entries": 146,
+      "exits": 147,
+      "mean_dwell_min": 486.23
+    },
+    {
+      "site_name": "Summit Site 2",
+      "job_number": "J-1007",
+      "entries": 147,
+      "exits": 147,
+      "mean_dwell_min": 480.5
+    },
+    {
+      "site_name": "Bluffs Site 3",
+      "job_number": "J-1014",
+      "entries": 146,
+      "exits": 147,
+      "mean_dwell_min": 472.74
+    },
+    {
+      "site_name": "Cedar Site 4",
+      "job_number": "J-1021",
+      "entries": 147,
+      "exits": 147,
+      "mean_dwell_min": 482.15
+    },
+    {
+      "site_name": "Summit Site 5",
+      "job_number": "J-1028",
+      "entries": 126,
+      "exits": 126,
+      "mean_dwell_min": 477.66
+    },
+    {
+      "site_name": "Summit Site 6",
+      "job_number": "J-1035",
+      "entries": 126,
+      "exits": 126,
+      "mean_dwell_min": 479.71
+    }
+  ],
+  "dq_gates": [
+    {
+      "check_name": "freshness",
+      "severity": "error",
+      "passed": true,
+      "observed": 2.773,
+      "threshold": 720.0,
+      "detail": "newest=2026-10-12T18:11:31.568000+00:00 stale_vehicles(3)=VEH-030:77.6h, VEH-016:76.9h, VEH-034:75.6h"
+    },
+    {
+      "check_name": "duplicate_rate",
+      "severity": "error",
+      "passed": true,
+      "observed": 1.877,
+      "threshold": 5.0,
+      "detail": "deduped=3105 total=165426"
+    },
+    {
+      "check_name": "invalid_gps_reject_rate",
+      "severity": "error",
+      "passed": true,
+      "observed": 1.5028,
+      "threshold": 3.0,
+      "detail": "rejects=2435 total=162034"
+    },
+    {
+      "check_name": "referential_integrity",
+      "severity": "error",
+      "passed": true,
+      "observed": 0.0,
+      "threshold": 0.0,
+      "detail": "unmatched_fact_rows=0"
+    },
+    {
+      "check_name": "unmatched_geofence_exits",
+      "severity": "error",
+      "passed": true,
+      "observed": 0.4762,
+      "threshold": 1.0,
+      "detail": "unmatched=8 exits=1680"
+    },
+    {
+      "check_name": "row_count_drift",
+      "severity": "error",
+      "passed": true,
+      "observed": 6.7993,
+      "threshold": 40.0,
+      "detail": "current=154920 previous=166222"
+    },
+    {
+      "check_name": "watermark_monotonicity",
+      "severity": "error",
+      "passed": true,
+      "observed": 0.0,
+      "threshold": 0.0,
+      "detail": "all watermarks at or ahead of raw max"
+    }
+  ],
+  "dq_pass_count": 7,
+  "dq_total": 7
+}

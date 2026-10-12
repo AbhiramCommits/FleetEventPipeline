@@ -20,6 +20,7 @@ npm-debug.log*
 .handler.pid
 *.log
 data/generated/
+reports/alerts/
 
 # OS
 .DS_Store
