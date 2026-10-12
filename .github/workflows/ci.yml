@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: lint, demo, test
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: fleet
+          POSTGRES_PASSWORD: fleet
+          POSTGRES_DB: fleet
+        ports:
+          - 55432:5432
+        options: >-
+          --health-cmd "pg_isready -U fleet -d fleet"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      DB_DSN: postgresql://fleet:fleet@localhost:55432/fleet
+      FLEET_API_BASE: http://localhost:8099
+      FLEET_API_TOKEN: local-dev-token
+      HANDLER_URL: http://localhost:7099/api/eventgrid
+      EVENTGRID_ENDPOINT: ""
+      EVENTGRID_KEY: ""
+      MOCKAPI_FAILURE_RATE: "0.03"
+      PAGE_SIZE: "1000"
+      LOOKBACK_HOURS: "720"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Lint (ruff + eslint)
+        run: |
+          python -m ruff check src tests scripts
+          npm run lint
+
+      - name: Apply migrations
+        run: python -m src.common.migrate
+
+      - name: Full pipeline demo (fails if any DQ gate fails)
+        run: make demo
+
+      - name: Export Power BI CSVs
+        run: python scripts/export_powerbi.py
+
+      - name: Python tests
+        run: python -m pytest -q
+
+      - name: Node tests
+        run: npm test
+
+      - name: Upload reports and exports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fleet-pipeline-artifacts
+          path: |
+            reports/
+            powerbi/exports/

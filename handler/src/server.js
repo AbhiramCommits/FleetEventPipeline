@@ -12,7 +12,6 @@ const express = require('express');
 
 const { pool } = require('./db');
 const {
-  isValidationEvent,
   validationResponse,
   unknownEventTypes,
 } = require('./validation');
@@ -20,7 +19,6 @@ const { normalizeGpsPing, normalizeGeofenceEvent } = require('./normalize');
 const { writeGpsRows, writeGeofenceRows, writeReject } = require('./writer');
 
 const GPS_EVENT = 'Fleet.GpsPingBatchLanded';
-const GEOFENCE_EVENT = 'Fleet.GeofenceEventLanded';
 
 /**
  * Process an Event Grid event array (or a single event).

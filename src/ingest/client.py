@@ -8,8 +8,9 @@ with jitter on 429/5xx/timeouts, max 5 attempts) and a cursor-following
 from __future__ import annotations
 
 import time
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import Any, Iterator
+from typing import Any
 
 import httpx
 from tenacity import Retrying, retry_if_exception_type, stop_after_attempt, wait_exponential_jitter
@@ -67,7 +68,7 @@ class FleetApiClient:
         """Close the underlying HTTP connection pool."""
         self._client.close()
 
-    def __enter__(self) -> "FleetApiClient":
+    def __enter__(self) -> FleetApiClient:
         return self
 
     def __exit__(self, *exc: object) -> None:

@@ -20,7 +20,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from tabulate import tabulate
@@ -266,7 +266,7 @@ def collect_metrics() -> dict[str, Any]:
         total_runtime = round(ingestion["wall_clock_sec"] + elt_elapsed, 2)
 
     metrics: dict[str, Any] = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "run_ids": {
             "ingest": ingestion["run_id"],
             "elt": str(elt.get("run_id")) if elt.get("run_id") else None,

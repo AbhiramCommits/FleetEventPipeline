@@ -8,7 +8,7 @@ POST to a pluggable webhook sink (``ALERT_WEBHOOK``).
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -23,10 +23,10 @@ logger = get_logger("fleet.dq.alert")
 def render_markdown(run_id: str, failures: list[dict[str, Any]]) -> str:
     """Render the alert body as Markdown."""
     lines = [
-        f"# Data-quality alert",
+        "# Data-quality alert",
         "",
         f"- **run_id:** `{run_id}`",
-        f"- **generated_at:** {datetime.now(timezone.utc).isoformat()}",
+        f"- **generated_at:** {datetime.now(UTC).isoformat()}",
         f"- **failed checks:** {len(failures)}",
         "",
         "| check | severity | observed | threshold | detail |",

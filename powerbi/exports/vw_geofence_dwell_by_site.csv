@@ -1,0 +1,10 @@
+site_name,job_number,site_type,matched_visits,unmatched_exits,mean_dwell_min,total_dwell_hours
+Summit Site 5,J-1028,job_site,126,0,477.66,1003.09
+Summit Site 2,J-1007,job_site,147,0,480.50,1177.22
+Bluffs Site 3,J-1014,job_site,146,1,472.74,1150.33
+Cedar Site 4,J-1021,job_site,147,0,482.15,1181.28
+Summit Site 6,J-1035,job_site,126,0,479.71,1007.38
+Fairview Site 1,J-1000,job_site,146,1,486.23,1183.17
+Yard 2,,yard,284,2,1412.54,6379.99
+Yard 1,,yard,307,1,1400.58,6839.52
+Yard 3,,yard,283,3,1419.43,6387.43

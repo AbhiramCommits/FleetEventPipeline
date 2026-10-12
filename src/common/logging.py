@@ -10,7 +10,7 @@ import json
 import logging
 import sys
 from contextvars import ContextVar
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 _run_id: ContextVar[str | None] = ContextVar("run_id", default=None)
 
@@ -30,7 +30,7 @@ class JsonFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, object] = {
-            "ts": datetime.now(tz=timezone.utc).isoformat(),
+            "ts": datetime.now(tz=UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),

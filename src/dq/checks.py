@@ -16,8 +16,9 @@ from __future__ import annotations
 
 import sys
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Callable
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any
 
 import psycopg
 from tabulate import tabulate
@@ -57,7 +58,7 @@ def check_freshness(conn: psycopg.Connection, lookback_hours: int) -> dict[str, 
     newest = row[0]
     if newest is None:
         return _gate("freshness", False, 10**6, lookback_hours, "no staged pings", "error")
-    age_hours = (datetime.now(timezone.utc) - newest).total_seconds() / 3600
+    age_hours = (datetime.now(UTC) - newest).total_seconds() / 3600
     stale = conn.execute(
         f"""
         SELECT vehicle_id, round((extract(epoch FROM (now() - max(ts))) / 3600)::numeric, 1) AS age_h

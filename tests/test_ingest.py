@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -16,11 +16,11 @@ from src.ingest.eventgrid import _chunks, build_envelopes
 
 
 def _iso(dt: datetime) -> str:
-    return dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    return dt.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
 def _ping(i: int) -> dict[str, Any]:
-    base = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    base = datetime(2026, 1, 1, tzinfo=UTC)
     from datetime import timedelta
 
     return {
@@ -138,7 +138,7 @@ def test_eventgrid_envelopes_match_schema() -> None:
         assert env["data"]["source"] == "gps"
         assert env["data"]["count"] == len(env["data"]["rows"])
 
-    geo = build_envelopes("geofence", [{"id": "g1", "vehicleId": "V1", "ts": _iso(datetime.now(timezone.utc))}], run_id)
+    geo = build_envelopes("geofence", [{"id": "g1", "vehicleId": "V1", "ts": _iso(datetime.now(UTC))}], run_id)
     assert geo[0]["eventType"] == "Fleet.GeofenceEventLanded"
 
 

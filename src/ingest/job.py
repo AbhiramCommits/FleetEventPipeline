@@ -19,7 +19,7 @@ import argparse
 import sys
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import psycopg
@@ -102,7 +102,7 @@ def run_source(
     insert_sql = f"INSERT INTO {raw_table} (payload, source_id, run_id) VALUES (%s, %s, %s)"
 
     watermark = read_watermark(source, conn)
-    after = watermark.astimezone(timezone.utc).isoformat().replace("+00:00", "Z") if watermark else None
+    after = watermark.astimezone(UTC).isoformat().replace("+00:00", "Z") if watermark else None
     log_event(logger, "source start", source=source, after=after, endpoint=endpoint)
 
     rows_read = 0

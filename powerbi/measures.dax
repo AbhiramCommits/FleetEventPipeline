@@ -1,0 +1,102 @@
+// powerbi/measures.dax
+// FleetEventPipeline semantic layer measures.
+// The dataset imports the mart views (vw_*) plus the star-schema dims/facts.
+// Every measure is commented with its business meaning.
+
+// ---------------------------------------------------------------------------
+// Base time measures
+// ---------------------------------------------------------------------------
+
+-- Moving Minutes: time spent travelling (sum of trip segment durations).
+Moving Minutes =
+SUMX (
+    fact_trip_segment,
+    DATEDIFF ( fact_trip_segment[start_ts], fact_trip_segment[end_ts], MINUTE )
+)
+
+-- Idle Minutes: time engine-on while stationary (speed < 2 kph).
+Idle Minutes = SUM ( fact_idle_event[duration_min] )
+
+-- Engine Hours: total engine-on time (moving + idling) expressed in hours.
+Engine Hours = DIVIDE ( [Moving Minutes] + [Idle Minutes], 60 )
+
+-- Idle Hours: stationary engine-on time in hours.
+Idle Hours = DIVIDE ( [Idle Minutes], 60 )
+
+// ---------------------------------------------------------------------------
+// Utilization measures
+// ---------------------------------------------------------------------------
+
+-- Utilization %: share of engine-on time the asset spent moving. Business
+-- signal for "is this machine earning its keep?".
+Utilization % =
+DIVIDE ( [Moving Minutes], [Moving Minutes] + [Idle Minutes] )
+
+-- Idle %: share of engine-on time spent idling (fuel burn with no production).
+Idle % = DIVIDE ( [Idle Minutes], [Moving Minutes] + [Idle Minutes] )
+
+-- Distance (km): total point-to-point distance travelled.
+Distance (km) = SUM ( fact_gps_ping[distance_km] )
+
+// ---------------------------------------------------------------------------
+// Fleet / geofence measures
+// ---------------------------------------------------------------------------
+
+-- Active Assets: distinct assets reporting telemetry in the current filter context.
+Active Assets = DISTINCTCOUNT ( fact_gps_ping[vehicle_key] )
+
+-- Avg Dwell (min): average time an asset spent inside a geofence.
+Avg Dwell (min) = AVERAGE ( fact_geofence_transition[dwell_min] )
+
+-- Geofence Entries: number of resolved site arrivals.
+Geofence Entries =
+COUNTROWS (
+    FILTER ( fact_geofence_transition, NOT ISBLANK ( fact_geofence_transition[entered_at] ) )
+)
+
+-- Geofence Exits: number of resolved/unmatched departures.
+Geofence Exits = COUNTROWS ( fact_geofence_transition )
+
+// ---------------------------------------------------------------------------
+// Pipeline health measures
+// ---------------------------------------------------------------------------
+
+-- Pings Rejected %: observed invalid-GPS reject rate from the DQ scorecard.
+Pings Rejected % =
+CALCULATE (
+    MAX ( vw_data_quality_scorecard[observed] ),
+    vw_data_quality_scorecard[check_name] = "invalid_gps_reject_rate"
+)
+
+-- Data Freshness (hours): age of the newest GPS ping.
+Data Freshness (hours) =
+DATEDIFF ( MAX ( fact_gps_ping[event_ts] ), NOW (), HOUR )
+
+-- DQ Gates Passed: number of passing gates in the latest DQ run.
+DQ Gates Passed = CALCULATE ( COUNTROWS ( vw_data_quality_scorecard ), vw_data_quality_scorecard[passed] = TRUE )
+
+// ---------------------------------------------------------------------------
+// Time-intelligence variants (driven by dim_date)
+// ---------------------------------------------------------------------------
+
+-- Idle % MTD: month-to-date idling share.
+Idle % MTD = CALCULATE ( [Idle %], TOTALMTD ( dim_date[full_date] ) )
+
+-- Idle Hours MTD: month-to-date idle hours.
+Idle Hours MTD = CALCULATE ( [Idle Hours], TOTALMTD ( dim_date[full_date] ) )
+
+-- Idle Hours Prior Month: previous calendar month idle hours for period-over-period.
+Idle Hours Prior Month = CALCULATE ( [Idle Hours], DATEADD ( dim_date[full_date], -1, MONTH ) )
+
+-- Idle Hours 7-Day Rolling: trailing 7-day idle hours; smooths daily noise for ops reviews.
+Idle Hours 7-Day Rolling =
+CALCULATE (
+    [Idle Hours],
+    DATESINPERIOD ( dim_date[full_date], LASTDATE ( dim_date[full_date] ), -7, DAY )
+)
+
+-- Utilization % MTD: month-to-date utilization.
+Utilization % MTD = CALCULATE ( [Utilization %], TOTALMTD ( dim_date[full_date] ) )
+
+-- Distance (km) Prior Month: previous month distance, for trend comparisons.
+Distance (km) Prior Month = CALCULATE ( [Distance (km)], DATEADD ( dim_date[full_date], -1, MONTH ) )

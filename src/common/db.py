@@ -7,8 +7,9 @@ the SQL without an ORM layer.
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable, Sequence
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any
 
 import psycopg
 from psycopg.rows import dict_row

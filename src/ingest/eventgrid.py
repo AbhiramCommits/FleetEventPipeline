@@ -16,8 +16,9 @@ Envelopes are grouped per vehicle so ``subject`` can follow the
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Iterable
+from collections.abc import Iterable
+from datetime import UTC, datetime
+from typing import Any
 
 import httpx
 
@@ -41,7 +42,7 @@ def build_envelopes(source: str, rows: list[dict[str, Any]], run_id: str) -> lis
     for row in rows:
         grouped.setdefault(str(row.get("vehicleId") or row.get("vehicle_id") or "unknown"), []).append(row)
 
-    event_time = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    event_time = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     envelopes: list[dict[str, Any]] = []
     for vehicle_id, group in grouped.items():
         envelopes.append(

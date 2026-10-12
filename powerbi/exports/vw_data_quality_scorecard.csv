@@ -1,0 +1,8 @@
+check_name,severity,passed,status,observed,threshold,detail,run_started_at
+freshness,error,True,PASS,2.8821,720,"newest=2026-10-12T18:11:31.568000+00:00 stale_vehicles(3)=VEH-030:77.7h, VEH-016:77.1h, VEH-034:75.7h",2026-10-12 21:04:27.182716+00:00
+duplicate_rate,error,True,PASS,1.877,5,deduped=3105 total=165426,2026-10-12 21:04:27.182716+00:00
+invalid_gps_reject_rate,error,True,PASS,1.5028,3,rejects=2435 total=162034,2026-10-12 21:04:27.182716+00:00
+referential_integrity,error,True,PASS,0,0,unmatched_fact_rows=0,2026-10-12 21:04:27.182716+00:00
+unmatched_geofence_exits,error,True,PASS,0.4762,1,unmatched=8 exits=1680,2026-10-12 21:04:27.182716+00:00
+row_count_drift,error,True,PASS,6.7993,40,current=154920 previous=166222,2026-10-12 21:04:27.182716+00:00
+watermark_monotonicity,error,True,PASS,0,0,all watermarks at or ahead of raw max,2026-10-12 21:04:27.182716+00:00

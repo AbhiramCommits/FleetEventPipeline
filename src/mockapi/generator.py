@@ -13,7 +13,7 @@ import json
 import math
 import random
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -200,7 +200,7 @@ def _gen_vehicle_day(
                 "id": f"gps-{int(vehicle['vehicleId'].split('-')[1]):03d}-{seq:07d}",
                 "vehicleId": vehicle["vehicleId"],
                 "operatorId": operator_id,
-                "ts": ts.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "ts": ts.astimezone(UTC).isoformat().replace("+00:00", "Z"),
                 "lat": round(lat, 6),
                 "lon": round(lon, 6),
                 "speedMph": round(speed_mph, 2),
@@ -222,7 +222,7 @@ def _gen_vehicle_day(
                 "vehicleId": vehicle["vehicleId"],
                 "geofenceId": geofence["geofenceId"],
                 "eventType": event_type,
-                "ts": ts.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "ts": ts.astimezone(UTC).isoformat().replace("+00:00", "Z"),
                 "lat": lat,
                 "lon": lon,
             }
@@ -341,7 +341,7 @@ def _inject_defects(
         clone = dict(src)
         clone["id"] = src["id"] + "-late"
         when = now - timedelta(days=rng.randint(31, 40), hours=rng.randint(0, 23))
-        clone["ts"] = when.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+        clone["ts"] = when.astimezone(UTC).isoformat().replace("+00:00", "Z")
         gps.append(clone)
         counts["late_arriving"] += 1
 
@@ -386,7 +386,7 @@ def generate() -> dict[str, Any]:
     """Generate the full dataset and return it as a JSON-serialisable dict."""
     rng = random.Random(SEED)
     ref, vehicle_meta = build_reference(rng)
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     days = _workdays(now, rng)
 
     gps: list[dict[str, Any]] = []

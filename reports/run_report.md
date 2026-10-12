@@ -1,19 +1,19 @@
 # FleetEventPipeline — run report
 
-_Generated 2026-10-12T20:57:55.085298+00:00_
+_Generated 2026-10-12T21:04:30.158022+00:00_
 
 ## Headline
 
-|------------------------|-----------------|
-| Events ingested (read) | 165,426         |
-| Rows raw-landed        | 165,426         |
-| Duplicates blocked     | 3,105           |
-| Rows rejected          | 4,009           |
-| Ingestion wall-clock   | 13.591 s        |
-| Throughput             | 12,172.1 rows/s |
-| Retries (429/503)      | 5               |
-| Total pipeline runtime | 23.41 s         |
-| DQ gates passed        | 7/7             |
+|------------------------|----------------|
+| Events ingested (read) | 165,426        |
+| Rows raw-landed        | 165,426        |
+| Duplicates blocked     | 3,105          |
+| Rows rejected          | 4,009          |
+| Ingestion wall-clock   | 23.431 s       |
+| Throughput             | 7,060.1 rows/s |
+| Retries (429/503)      | 5              |
+| Total pipeline runtime | 37.92 s        |
+| DQ gates passed        | 7/7            |
 
 ## Rows per table
 
@@ -108,7 +108,7 @@ _Generated 2026-10-12T20:57:55.085298+00:00_
 
 | check                    | result   |   observed |   threshold | detail                                                                                                |
 |--------------------------|----------|------------|-------------|-------------------------------------------------------------------------------------------------------|
-| freshness                | PASS     |     2.773  |         720 | newest=2026-10-12T18:11:31.568000+00:00 stale_vehicles(3)=VEH-030:77.6h, VEH-016:76.9h, VEH-034:75.6h |
+| freshness                | PASS     |     2.8821 |         720 | newest=2026-10-12T18:11:31.568000+00:00 stale_vehicles(3)=VEH-030:77.7h, VEH-016:77.1h, VEH-034:75.7h |
 | duplicate_rate           | PASS     |     1.877  |           5 | deduped=3105 total=165426                                                                             |
 | invalid_gps_reject_rate  | PASS     |     1.5028 |           3 | rejects=2435 total=162034                                                                             |
 | referential_integrity    | PASS     |     0      |           0 | unmatched_fact_rows=0                                                                                 |
