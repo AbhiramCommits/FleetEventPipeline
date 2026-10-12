@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: fleet_db
+    environment:
+      POSTGRES_USER: fleet
+      POSTGRES_PASSWORD: fleet
+      POSTGRES_DB: fleet
+    ports:
+      - "55432:5432"
+    volumes:
+      - fleet_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fleet -d fleet"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  fleet_pgdata:

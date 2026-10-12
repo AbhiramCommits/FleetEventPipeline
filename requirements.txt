@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+httpx
+psycopg[binary]
+pydantic
+tenacity
+python-dotenv
+pytest
+tabulate

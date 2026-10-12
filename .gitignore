@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Env / secrets
+.env
+
+# Local runtime artifacts
+.api.pid
+.handler.pid
+*.log
+data/generated/
+
+# OS
+.DS_Store

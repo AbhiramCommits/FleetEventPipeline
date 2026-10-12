@@ -1,0 +1,20 @@
+{
+  "name": "fleet-event-pipeline-handler",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Azure Functions style HTTP trigger that receives Azure Event Grid fleet events and normalizes them into staging.",
+  "type": "commonjs",
+  "main": "handler/src/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node handler/src/server.js",
+    "test": "node --test handler/test"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  }
+}
