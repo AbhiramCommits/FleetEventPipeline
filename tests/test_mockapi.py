@@ -2,12 +2,26 @@
 
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
 
+from src.mockapi import app as mockapi_app
 from src.mockapi.app import app, dataset
 
 TOKEN = "local-dev-token"
 AUTH = {"Authorization": f"Bearer {TOKEN}"}
+
+
+@pytest.fixture(autouse=True)
+def _no_injected_failures(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Disable the mock API's transient 429/503 injection for these tests.
+
+    These tests check auth and pagination integrity, not retry behaviour (that is
+    the ingest client's job, via tenacity). ``conftest.py`` only *defaults*
+    MOCKAPI_FAILURE_RATE to 0, so an environment that sets it (CI uses 0.03 for
+    the end-to-end demo) would otherwise make these direct requests fail.
+    """
+    monkeypatch.setattr(mockapi_app, "FAILURE_RATE", 0.0)
 
 
 def _walk(client: TestClient, path: str, limit: int) -> list[dict]:
